@@ -1,0 +1,6 @@
+{
+  "name": "Throughline",
+  "description": "A private journaling and reflection space to understand your own thinking over time.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
