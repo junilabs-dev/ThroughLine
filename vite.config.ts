@@ -5,7 +5,13 @@ import {defineConfig} from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
+  const geminiApiKey = (process.env.GEMINI_API_KEY || '').trim();
+  const firebaseApiKey = (process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY || geminiApiKey).trim();
+
   return {
+    define: {
+      '__FIREBASE_API_KEY__': JSON.stringify(firebaseApiKey),
+    },
     plugins: [
       react(),
       tailwindcss(),

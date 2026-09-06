@@ -10,17 +10,30 @@ export interface FirebaseClientConfig {
   messagingSenderId?: string;
 }
 
+declare const __FIREBASE_API_KEY__: string | undefined;
+
 /**
  * Secure Firebase Client Configuration Provider
- * Resolves credentials through the environment/config layer with zero hardcoding.
- * Supports runtime environment overrides (e.g. VITE_FIREBASE_API_KEY or VITE_GEMINI_API_KEY).
+ * Resolves credentials dynamically through the environment/config layer with zero hardcoding.
+ * Supports runtime environment overrides without committing secrets to version control.
  */
 export function getFirebaseConfig(): FirebaseClientConfig {
-  const envApiKey =
-    (import.meta.env.VITE_FIREBASE_API_KEY as string | undefined)?.trim() ||
-    (import.meta.env.VITE_GEMINI_API_KEY as string | undefined)?.trim();
+  let dynamicKey = '';
+  try {
+    if (typeof __FIREBASE_API_KEY__ !== 'undefined' && __FIREBASE_API_KEY__) {
+      dynamicKey = __FIREBASE_API_KEY__;
+    }
+  } catch {
+    // ignore
+  }
 
-  const apiKey = envApiKey || firebaseConfigRaw.apiKey;
+  const envApiKey =
+    dynamicKey ||
+    (import.meta.env.VITE_FIREBASE_API_KEY as string | undefined)?.trim() ||
+    (import.meta.env.VITE_GEMINI_API_KEY as string | undefined)?.trim() ||
+    '';
+
+  const apiKey = envApiKey || firebaseConfigRaw.apiKey || '';
 
   return {
     ...firebaseConfigRaw,
